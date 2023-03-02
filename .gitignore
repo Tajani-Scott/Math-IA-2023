@@ -1,129 +1,267 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+import math
+import pandas as pd
+import matplotlib.pyplot as plt
 
-# C extensions
-*.so
 
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+# Plastic
+AMB_TEMP = 32  # Ambient temperature (in Celsius)
+PLASTIC_TEMP_1 = 32  # Initial temperature of plastic (in Celsius)
+PLASTIC_TEMP_2 = 75  # Initial temperature of plastic 2 (in Celsius)
+PLASTIC_TEMP_3 = -18  # Initial temperature of plastic 3 (in Celsius)
+PLASTIC_COOL_RATE = 0.05  # Cooling rate for plastic (in per second)
+PLASTIC_SIM_TIME = 600  # Simulation time for plastic (in seconds)
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+# Metal
+METAL_TEMP_1 = 32  # Initial temperature of metal (in Celsius)
+METAL_TEMP_2 = 75  # Initial temperature of metal 2 (in Celsius)
+METAL_TEMP_3 = -18  # Initial temperature of metal 3 (in Celsius)
+METAL_COOL_RATE = 200  # Cooling rate for metal (in per second)
+METAL_SIM_TIME = 600  # Simulation time for metal (in seconds)
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+# Glass
+GLASS_TEMP_1 = 32  # Initial temperature of glass (in Celsius)
+GLASS_TEMP_2 = 75  # Initial temperature of glass 2  (in Celsius)
+GLASS_TEMP_3 = -18  # Initial temperature of glass 3 (in Celsius)
+GLASS_COOL_RATE = 0.8  # Cooling rate for glass (in per second)
+GLASS_SIM_TIME = 600  # Simulation time for glass (in seconds)
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
+# Simulation settings
+TIME_STEP = 1  # Time step for simulation (in seconds)
+RECORD_INTERVAL = 60  # Record interval (in seconds)
 
-# Translations
-*.mo
-*.pot
 
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
+# Function to calculate temperature at a given time for plastic, plastic 2, plastic 3
+def plastic_temperature(time):
+    return AMB_TEMP + (PLASTIC_TEMP_1 - AMB_TEMP) * math.exp(-PLASTIC_COOL_RATE * time)
 
-# Flask stuff:
-instance/
-.webassets-cache
+def plastic_temperature_2(time):
+    return AMB_TEMP + (PLASTIC_TEMP_2 - AMB_TEMP) * math.exp(-PLASTIC_COOL_RATE * time)
 
-# Scrapy stuff:
-.scrapy
+def plastic_temperature_3(time):
+    return AMB_TEMP + (PLASTIC_TEMP_3 - AMB_TEMP) * math.exp(-PLASTIC_COOL_RATE * time)
 
-# Sphinx documentation
-docs/_build/
 
-# PyBuilder
-target/
+# Function to calculate temperature at a given time for metal, metal 2, metal 3
+def metal_temperature(time):
+    return AMB_TEMP + (METAL_TEMP_1 - AMB_TEMP) * math.exp(-METAL_COOL_RATE * time)
 
-# Jupyter Notebook
-.ipynb_checkpoints
+def metal_temperature_2(time):
+    return AMB_TEMP + (METAL_TEMP_2 - AMB_TEMP) * math.exp(-METAL_COOL_RATE * time)
 
-# IPython
-profile_default/
-ipython_config.py
+def metal_temperature_3(time):
+    return AMB_TEMP + (METAL_TEMP_3 - AMB_TEMP) * math.exp(-METAL_COOL_RATE * time)
 
-# pyenv
-.python-version
 
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
+# Function to calculate temperature at a given time for glass, glass 2, glass 3
+def glass_temperature(time):
+    return AMB_TEMP + (GLASS_TEMP_1 - AMB_TEMP) * math.exp(-GLASS_COOL_RATE * time)
 
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow
-__pypackages__/
+def glass_temperature_2(time):
+    return AMB_TEMP + (GLASS_TEMP_2 - AMB_TEMP) * math.exp(-GLASS_COOL_RATE * time)
 
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
+def glass_temperature_3(time):
+    return AMB_TEMP + (GLASS_TEMP_3 - AMB_TEMP) * math.exp(-GLASS_COOL_RATE * time)
 
-# SageMath parsed files
-*.sage.py
 
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
 
-# Spyder project settings
-.spyderproject
-.spyproject
+# Record temperature data for plastic
+plastic_time = 0
+plastic_temp_data = []
+plastic_time_data = []
+while plastic_time <= PLASTIC_SIM_TIME:
+    if plastic_time % RECORD_INTERVAL == 0:
+        plastic_temp = plastic_temperature(plastic_time)
+        plastic_temp_data.append(plastic_temp)
+        plastic_time_data.append(plastic_time)
+    plastic_time += TIME_STEP
 
-# Rope project settings
-.ropeproject
+# Plot temperature data for plastic
+fig, ax = plt.subplots()
+ax.plot(plastic_time_data, plastic_temp_data)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Temperature (C)')
+ax.set_title('Plastic')
 
-# mkdocs documentation
-/site
+# Record temperature data for plastic 2
+plastic_time = 0
+plastic_temp_data = []
+plastic_time_data = []
+while plastic_time <= PLASTIC_SIM_TIME:
+    if plastic_time % RECORD_INTERVAL == 0:
+        plastic_temp_2 = plastic_temperature_2(plastic_time)
+        plastic_temp_data.append(plastic_temp_2)
+        plastic_time_data.append(plastic_time)
+    plastic_time += TIME_STEP
 
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
+# Plot temperature data for plastic 2
+fig, ax = plt.subplots()
+ax.plot(plastic_time_data, plastic_temp_data)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Temperature (C)')
+ax.set_title('Plastic 2')
 
-# Pyre type checker
-.pyre/
+# Record temperature data for plastic 3
+plastic_time = 0
+plastic_temp_data = []
+plastic_time_data = []
+while plastic_time <= PLASTIC_SIM_TIME:
+    if plastic_time % RECORD_INTERVAL == 0:
+        plastic_temp_3 = plastic_temperature_3(plastic_time)
+        plastic_temp_data.append(plastic_temp_3)
+        plastic_time_data.append(plastic_time)
+    plastic_time += TIME_STEP
+
+# Plot temperature data for plastic 3
+fig, ax = plt.subplots()
+ax.plot(plastic_time_data, plastic_temp_data)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Temperature (C)')
+ax.set_title('Plastic 3')
+
+
+
+
+# Record temperature data for metal
+metal_time = 0
+metal_temp_data = []
+metal_time_data = []
+while metal_time <= METAL_SIM_TIME:
+    if metal_time % RECORD_INTERVAL == 0:
+        metal_temp = plastic_temperature(metal_time)
+        metal_temp_data.append(metal_temp)
+        metal_time_data.append(metal_time)
+    metal_time += TIME_STEP
+
+# Plot temperature data for metal
+fig, ax = plt.subplots()
+ax.plot(metal_time_data, metal_temp_data)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Temperature (C)')
+ax.set_title('Metal')
+
+# Record temperature data for plastic 3
+metal_time = 0
+metal_temp_data = []
+metal_time_data = []
+while metal_time <= METAL_SIM_TIME:
+    if metal_time % RECORD_INTERVAL == 0:
+        metal_temp_2 = metal_temperature_2(metal_time)
+        metal_temp_data.append(metal_temp_2)
+        metal_time_data.append(metal_time)
+    metal_time += TIME_STEP
+
+# Plot temperature data for metal 2
+fig, ax = plt.subplots()
+ax.plot(metal_time_data, metal_temp_data)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Temperature (C)')
+ax.set_title('Metal 2')
+
+# Record temperature data for metal 3
+metal_time = 0
+metal_temp_data = []
+metal_time_data = []
+while metal_time <= METAL_SIM_TIME:
+    if metal_time % RECORD_INTERVAL == 0:
+        metal_temp_3 = metal_temperature_3(metal_time)
+        metal_temp_data.append(metal_temp_3)
+        metal_time_data.append(metal_time)
+    metal_time += TIME_STEP
+
+# Plot temperature data for metal 3
+fig, ax = plt.subplots()
+ax.plot(metal_time_data, metal_temp_data)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Temperature (C)')
+ax.set_title('Metal 3')
+
+
+# Record temperature data for glass
+glass_time = 0
+glass_temp_data = []
+glass_time_data = []
+while glass_time <= GLASS_SIM_TIME:
+    if glass_time % RECORD_INTERVAL == 0:
+        glass_temp = glass_temperature(glass_time)
+        glass_temp_data.append(glass_temp)
+        glass_time_data.append(glass_time)
+    glass_time += TIME_STEP
+
+# Plot temperature data for glass
+fig, ax = plt.subplots()
+ax.plot(glass_time_data, glass_temp_data)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Temperature (C)')
+ax.set_title('Glass')
+
+ # Record temperature data for glass 2
+glass_time = 0
+glass_temp_data = []
+glass_time_data = []
+while glass_time <= GLASS_SIM_TIME:
+    if glass_time % RECORD_INTERVAL == 0:
+        glass_temp_2 = glass_temperature_2(glass_time)
+        glass_temp_data.append(glass_temp_2)
+        glass_time_data.append(glass_time)
+    glass_time += TIME_STEP
+
+# Plot temperature data for glass 2
+fig, ax = plt.subplots()
+ax.plot(glass_time_data, glass_temp_data)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Temperature (C)')
+ax.set_title('Glass 2')
+
+ # Record temperature data for glass 3
+glass_time = 0
+glass_temp_data = []
+ glass_time_data = []
+while glass_time <= GLASS_SIM_TIME:
+    if glass_time % RECORD_INTERVAL == 0:
+        glass_temp_3 = glass_temperature_3(glass_time)
+        glass_temp_data.append(glass_temp_3)
+        glass_time_data.append(glass_time)
+    glass_time += TIME_STEP
+
+# Plot temperature data for glass 3
+fig, ax = plt.subplots()
+ax.plot(glass_time_data, glass_temp_data)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Temperature (C)')
+ax.set_title('Glass 3')
+
+# Record the output data in tables
+plastic_data = {'Time (s)': plastic_time_data, 'Temperature (Celsius)': plastic_temp_data}
+metal_data = {'Time (s)': metal_time_data, 'Temperature (Celsius)': metal_temp_data}
+glass_data = {'Time (s)': glass_time_data, 'Temperature (Celsius)': glass_temp_data}
+
+plastic_df = pd.DataFrame(plastic_data)
+metal_df = pd.DataFrame(metal_data)
+glass_df = pd.DataFrame(glass_data)
+
+print(plastic_df)
+print(metal_df)
+print(glass_df)
+
+
+# Plot temperature data for plastic
+plt.plot(plastic_time_data, plastic_temp_data)
+plt.xlabel('Time (s)')
+plt.ylabel('Temperature (C)')
+plt.title('Temperature vs Time for Plastic')
+plt.show()
+
+# Plot temperature data for metal
+plt.plot(metal_time_data, metal_temp_data)
+plt.xlabel('Time (s)')
+plt.ylabel('Temperature (C)')
+plt.title('Temperature vs Time for Metal')
+plt.show()
+
+
+# Plot temperature data for glass
+plt.plot(glass_time_data, glass_temp_data)
+plt.xlabel('Time (s)')
+plt.ylabel('Temperature (C)')
+plt.title('Temperature vs Time for Glass')
+plt.show()
